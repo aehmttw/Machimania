@@ -1,0 +1,184 @@
+newmtl F00_000_Hair_00_HAIR
+col 1 0.8 0
+dm true
+Ns 50
+Ka 0.8 0.8 0.8
+Kd 0.4 0.4 0.4
+Ks 0.2 0.2 0.2
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+#cel 3.0
+illum 2
+
+newmtl M00_000_00_EyeExtra_01_EYE
+map_Ka face.png
+dm true
+Ns 323.999994
+Ka 0.8 0.8 0.8
+Kd 0.4 0.4 0.4
+Ks 0.05 0.05 0.05
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+#cel 3.0
+illum 2
+
+newmtl M00_000_00_EyeHighlight_00_EYE
+map_Ka eyeshine.png
+dm false
+Ns 323.999994
+Ka 0.8 0.8 0.8
+Kd 0.4 0.4 0.4
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+#cel 3.0
+illum 2
+
+newmtl M00_000_00_EyeIris_00_EYE
+map_Ka iris.png
+dm false
+Ns 323.999994
+Ka 0.8 0.8 0.8
+Kd 0.4 0.4 0.4
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+#cel 3.0
+illum 2
+
+newmtl M00_000_00_EyeWhite_00_EYE
+col 1 1 1
+dm true
+Ns 323.999994
+Ka 0.8 0.8 0.8
+Kd 0.4 0.4 0.4
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+#cel 3.0
+illum 2
+
+newmtl M00_000_00_FaceBrow_00_FACE
+map_Ka eyebrow.png
+col 0.588 0.47 0.196
+dm false
+Ns 323.999994
+Ka 0.8 0.8 0.8
+Kd 0.4 0.4 0.4
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+#cel 3.0
+illum 2
+
+newmtl M00_000_00_FaceEyelash_00_FACE
+map_Ka eyelash.png
+col 0.588 0.47 0.196
+dm false
+Ns 323.999994
+Ka 0.8 0.8 0.8
+Kd 0.4 0.4 0.4
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+#cel 3.0
+illum 2
+
+newmtl M00_000_00_FaceEyeline_00_FACE
+map_Ka eyeline.png
+col 0.588 0.47 0.196
+dm false
+Ns 323.999994
+Ka 0.8 0.8 0.8
+Kd 0.4 0.4 0.4
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+#cel 3.0
+illum 2
+
+newmtl M00_000_00_FaceMouth_00_FACE
+map_Ka mouth.png
+dm true
+Ns 323.999994
+Ka 0.8 0.8 0.8
+Kd 0.4 0.4 0.4
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+#cel 3.0
+illum 2
+
+newmtl M00_000_00_Face_00_SKIN
+col 1 0.9 0.7
+dm true
+Ns 5
+Ka 0.8 0.8 0.8
+Kd 0.4 0.4 0.4
+Ks 0.05 0.05 0.05
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+#cel 3.0
+illum 2
+
+newmtl M00_001_01_Body_00_SKIN
+col 1 0.9 0.7
+dm true
+Ns 5
+Ka 0.8 0.8 0.8
+Kd 0.4 0.4 0.4
+Ks 0.05 0.05 0.05
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+#cel 3.0
+illum 2
+
+newmtl M00_001_01_Bottoms_01_CLOTH
+col 0.1 0.1 0.4
+dm true
+Ns 5
+Ka 0.8 0.8 0.8
+Kd 0.4 0.4 0.4
+Ks 0.025 0.025 0.025
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+#cel 3.0
+illum 2
+
+newmtl M00_005_01_Shoes_01_CLOTH
+col 0.6 0.4 0
+dm true
+Ns 5
+Ka 0.8 0.8 0.8
+Kd 0.4 0.4 0.4
+Ks 0.25 0.25 0.25
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+#cel 3.0
+illum 2
+
+newmtl M00_005_01_Tops_01_CLOTH
+col 0.8 0.8 0.8
+dm true
+Ns 5
+Ka 0.8 0.8 0.8
+Kd 0.4 0.4 0.4
+Ks 0.025 0.025 0.025
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+#cel 4.0
+illum 2

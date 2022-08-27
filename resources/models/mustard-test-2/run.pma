@@ -1,0 +1,80 @@
+duration 2 looped
+interpolation cubic
+
+time 0
+translation Root 0 0.2 0
+rotation Root 0 0 0
+rotation Bip_L_UpperArm -50 0 0
+rotation Bip_R_UpperArm -50 0 0
+rotation Bip_L_LowerArm -40 0 0
+rotation Bip_R_LowerArm 0 0 0
+
+rotation Bip_R_UpperLeg -10 80 5
+rotation Bip_R_LowerLeg 0 -70 0
+rotation Bip_R_Foot 0 0 0
+
+rotation Bip_C_Hips 5.0 0 0
+rotation Bip_C_Spine -3.3 0 0
+rotation Bip_C_Chest -3.3 0 0
+rotation Bip_C_UpperChest -3.4 0 0
+rotation Bip_C_Neck 5.0 0 0
+
+rotation Bip_L_UpperLeg -10 -20 -5
+rotation Bip_L_LowerLeg 0 -60 0
+rotation Bip_L_Foot 0 -10 0
+
+time 0.125
+rotation Bip_R_Foot 0 -7.5 -4
+
+time 0.5
+translation Root 0 0 0
+rotation Root 0 0 -1
+rotation Bip_R_UpperLeg 0 20 2
+rotation Bip_R_LowerLeg 0 -40 0
+rotation Bip_R_Foot 0 0 -1
+
+rotation Bip_L_UpperLeg 0 20 -2
+rotation Bip_L_LowerLeg 0 -120 0
+rotation Bip_L_Foot 0 10 0
+
+time 0.75
+rotation Bip_R_Foot 0 5 0
+
+time 1
+translation Root 0 0.2 0
+rotation Root 0 0 0
+rotation Bip_L_UpperArm 50 0 0
+rotation Bip_R_UpperArm 50 0 0
+rotation Bip_L_LowerArm 0 0 0
+rotation Bip_R_LowerArm 40 0 0
+
+rotation Bip_L_UpperLeg 10 80 -5
+rotation Bip_L_LowerLeg 0 -70 0
+rotation Bip_L_Foot 0 0 0
+
+rotation Bip_C_Hips -5.0 0 0
+rotation Bip_C_Spine 3.3 0 0
+rotation Bip_C_Chest 3.3 0 0
+rotation Bip_C_UpperChest 3.4 0 0
+rotation Bip_C_Neck -5.0 0 0
+
+rotation Bip_R_UpperLeg 10 -20 5
+rotation Bip_R_LowerLeg 0 -60 0
+rotation Bip_R_Foot 0 -5 0
+
+time 1.125
+rotation Bip_L_Foot 0 -7.5 4
+
+time 1.5
+translation Root 0 0 0
+rotation Root 0 0 1
+rotation Bip_L_UpperLeg 0 20 -2
+rotation Bip_L_LowerLeg 0 -40 0
+rotation Bip_L_Foot 0 0 1
+
+rotation Bip_R_UpperLeg 0 20 2
+rotation Bip_R_LowerLeg 0 -120 0
+rotation Bip_R_Foot 0 10 0
+
+time 1.75
+rotation Bip_L_Foot 0 5 0

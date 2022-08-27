@@ -1,0 +1,33 @@
+rotation Bip_L_Index1 0 0 30
+rotation Bip_L_Index2 0 0 30
+rotation Bip_L_Index3 0 0 30
+rotation Bip_L_Middle1 0 0 30
+rotation Bip_L_Middle2 0 0 30
+rotation Bip_L_Middle3 0 0 30
+rotation Bip_L_Ring1 0 0 30
+rotation Bip_L_Ring2 0 0 30
+rotation Bip_L_Ring3 0 0 30
+rotation Bip_L_Little1 0 0 30
+rotation Bip_L_Little2 0 0 30
+rotation Bip_L_Little3 0 0 30
+rotation Bip_L_Thumb1 0 -45 0
+rotation Bip_L_Thumb2 30 0 0
+rotation Bip_L_Thumb3 30 0 0
+
+rotation Bip_R_Index1 0 0 -30
+rotation Bip_R_Index2 0 0 -30
+rotation Bip_R_Index3 0 0 -30
+rotation Bip_R_Middle1 0 0 -30
+rotation Bip_R_Middle2 0 0 -30
+rotation Bip_R_Middle3 0 0 -30
+rotation Bip_R_Ring1 0 0 -30
+rotation Bip_R_Ring2 0 0 -30
+rotation Bip_R_Ring3 0 0 -30
+rotation Bip_R_Little1 0 0 -30
+rotation Bip_R_Little2 0 0 -30
+rotation Bip_R_Little3 0 0 -30
+rotation Bip_R_Thumb1 0 -45 0
+rotation Bip_R_Thumb2 -30 0 0
+rotation Bip_R_Thumb3 -30 0 0
+
+#translation Bip_C_Head 0 0.1 0
