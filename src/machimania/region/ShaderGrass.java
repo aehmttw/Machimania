@@ -18,7 +18,7 @@ public class ShaderGrass extends ShaderBase implements IBaseShader
     @Override
     public void initialize() throws Exception
     {
-        this.setUp("/shaders/main.vert", new String[]{"/shaders/main_grass.vert"}, "/shaders/main.frag", null);
+        this.setUp("/shaders/main.vert", new String[]{"/shaders/main_grass.vert"}, "/shaders/main.frag", new String[]{"/shaders/main_grass.frag"});
     }
 
     @Override

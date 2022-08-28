@@ -14,6 +14,7 @@ public class GroundRenderer
     public BaseStaticBatchRenderer batchRenderer;
     public GrassRenderer grassRenderer;
 
+    public float[] zero = new float[]{0f, 0f, 0f};
     public float[] ambient = new float[]{0.5f, 0.5f, 0.5f};
     public float[] diffuse = new float[]{0.7f, 0.7f, 0.7f};
     public float[] specular = new float[]{0.2f, 0.2f, 0.2f};
@@ -142,5 +143,7 @@ public class GroundRenderer
             this.grassRenderer.draw();
 
         Game.game.window.shaderBase.useNormal.set(false);
+        Game.game.window.disableMaterialLights();
+
     }
 }

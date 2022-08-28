@@ -16,7 +16,7 @@ public class ShaderBones extends ShaderBase implements IBaseShader, IBoneShader
     @Override
     public void initialize() throws Exception
     {
-        this.setUp("/shaders/main.vert", new String[]{"/shaders/main_bones.vert"}, "/shaders/main.frag", null);
+        this.setUp("/shaders/main.vert", new String[]{"/shaders/main_bones.vert"}, "/shaders/main.frag", new String[]{"/shaders/main_default.frag"});
     }
 
     @Override

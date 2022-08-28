@@ -157,7 +157,7 @@ void main(void)
                 if (celsections > 0.0)
                     d = float(int(celsections * d + celsections / 10.0)) / celsections;
 
-                col = minLight + (maxLight - minLight) * d;
+                col = getNormalLighting(minLight, maxLight, d);
 
                 if (!lit)
                     col = min(col, minLight);

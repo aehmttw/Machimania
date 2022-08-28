@@ -19,8 +19,6 @@ public class Region
     public boolean loaded = false;
     public GroundRenderer groundRenderer;
 
-    public float[] fullNormal = new float[]{(float) Game.game.window.lightVec[0], (float) Game.game.window.lightVec[1], (float) Game.game.window.lightVec[2]};
-
     public Region(int posX, int posY, int sizeX, int sizeY)
     {
         this.posX = posX;
@@ -53,26 +51,29 @@ public class Region
 
     public double getHeightAt(double x, double y)
     {
-        return Game.game.world.heightMap32.get(x, y) * 10 + Game.game.world.heightMap8.get(x, y) * 4 + Game.game.world.heightMap2.get(x, y);
+        //return Math.max(Math.abs(x), Math.abs(y));
+        return Game.game.world.heightMap256.get(x, y) * 100 + Game.game.world.heightMap32.get(x, y) * 10 + Game.game.world.heightMap8.get(x, y) * 2 + Game.game.world.heightMap2.get(x, y) * 0.5;
     }
 
-    public void load()
+    public boolean load()
     {
         if (this.loaded)
-            return;
+            return false;
 
         this.loaded = true;
         this.groundRenderer = new GroundRenderer(this);
+        return true;
     }
 
-    public void unload()
+    public boolean unload()
     {
         if (!this.loaded)
-            return;
+            return false;
 
         this.loaded = false;
         this.groundRenderer.free();
         this.groundRenderer = null;
+        return true;
     }
 
     public float[] getNormalAt(double x, double y)

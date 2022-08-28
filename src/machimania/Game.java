@@ -29,7 +29,7 @@ public class Game implements IUpdater, IDrawer, IWindowHandler
     public ArrayList<ScreenOverlay> screenOverlays = new ArrayList<>();
 
     public boolean debug = false;
-    public boolean vsync = false;
+    public boolean vsync = true;
     public boolean antialiasing = false;
 
     public double frameFrequency;
@@ -65,12 +65,12 @@ public class Game implements IUpdater, IDrawer, IWindowHandler
         window.lightBaseTransformation[1] = new Shear(window, 0, 0, 0, 0, 0.5, -0.5);
 
         ScreenOverlayMessage s = new ScreenOverlayMessage(this.drawing);
-        s.addMessage("Welcome to Machimania! You can move the character with the arrow keys. Press space, enter, or the right arrow to see the next message or speed up the rate at which this text appears.");
+        /*s.addMessage("Welcome to Machimania! You can move the character with the arrow keys. Press space, enter, or the right arrow to see the next message or speed up the rate at which this text appears.");
         s.addMessage("Use WASD to rotate and = and - to zoom the camera.");
         s.addMessage("You can toggle running mode with right shift.");
         s.addMessage("To enter a battle, press M.");
-        s.addMessage("This is still a very early development phase. Things are likely buggy and subject to change.");
-        //s.addMessage("im tired of clicking through text");
+        s.addMessage("This is still a very early development phase. Things are likely buggy and subject to change.");*/
+        s.addMessage("im tired of clicking through text");
 
         fpsCounter = new ScreenOverlayFPS(this.drawing);
 

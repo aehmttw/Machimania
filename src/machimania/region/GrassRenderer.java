@@ -104,9 +104,6 @@ public class GrassRenderer
             float[] startNorm = gr.getNormalAt(startX, startY);
             float[] endNorm = gr.getNormalAt(endX, endY);
 
-            float[] topStartNorm = averageVecs(startNorm, region.fullNormal);
-            float[] topEndNorm = averageVecs(endNorm, region.fullNormal);
-
             renderer.addVertex((float) startX, (float) startY, (float) (startHeight));
             renderer.addTexCoord(0, 1);
             renderer.addColor(r * bm, g * bm, b * bm, 1);
@@ -114,7 +111,7 @@ public class GrassRenderer
             renderer.addVertex((float) (startX + xOff), (float) (startY + yOff), (float) (height + startHeight));
             renderer.addTexCoord(0, 0);
             renderer.addColor(r, g, b, 1);
-            renderer.addNormal(topStartNorm);
+            renderer.addNormal(startNorm);
             renderer.addVertex((float) endX, (float) endY, (float) (endHeight));
             renderer.addTexCoord(1, 1);
             renderer.addColor(r * bm, g * bm, b * bm, 1);
@@ -123,7 +120,7 @@ public class GrassRenderer
             renderer.addVertex((float) (startX + xOff), (float) (startY + yOff), (float) (height + startHeight));
             renderer.addTexCoord(0, 0);
             renderer.addColor(r, g, b, 1);
-            renderer.addNormal(topStartNorm);
+            renderer.addNormal(startNorm);
             renderer.addVertex((float) endX, (float) endY, (float) (endHeight));
             renderer.addTexCoord(1, 1);
             renderer.addColor(r * bm, g * bm, b * bm, 1);
@@ -131,7 +128,7 @@ public class GrassRenderer
             renderer.addVertex((float) (endX + xOff), (float) (endY + yOff), (float) (height + endHeight));
             renderer.addTexCoord(1, 0);
             renderer.addColor(r, g, b, 1);
-            renderer.addNormal(topEndNorm);
+            renderer.addNormal(endNorm);
         }
 
         public float[] averageVecs(float[] n1, float[] n2)

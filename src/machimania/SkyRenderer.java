@@ -107,6 +107,6 @@ public class SkyRenderer
         Game.game.drawing.setColor(255, 255, 255);
 
         if (!Game.game.window.drawingShadow)
-            Game.game.drawing.drawBatch(this.batchRenderer, Game.game.character.posX, Game.game.character.posY, 0, 1, 1, 1, false, false);
+            Game.game.drawing.drawBatch(this.batchRenderer, Game.game.character.posX, Game.game.character.posY, Game.game.character.posZ, 1, 1, 1, false, false);
     }
 }
