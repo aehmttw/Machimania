@@ -29,28 +29,16 @@ public class ScreenWorld extends Screen
     @Override
     public void update()
     {
-        if (Game.game.window.pressedKeys.contains(InputCodes.KEY_W))
-            p += 0.01;
+        p = -Math.PI/4;
 
-        if (Game.game.window.pressedKeys.contains(InputCodes.KEY_S))
-            p -= 0.01;
+        r = -Game.game.character.c;
 
-        if (Game.game.window.pressedKeys.contains(InputCodes.KEY_D))
-            r += 0.01;
-
-        if (Game.game.window.pressedKeys.contains(InputCodes.KEY_A))
-            r -= 0.01;
-
-        if (Game.game.window.pressedKeys.contains(InputCodes.KEY_EQUAL))
-            dist -= 0.02;
-
-        if (Game.game.window.pressedKeys.contains(InputCodes.KEY_MINUS))
-            dist += 0.02;
+        dist = 0.66;
 
         if (Game.game.window.validPressedKeys.contains(InputCodes.KEY_M))
         {
             Game.game.window.validPressedKeys.remove((Integer) InputCodes.KEY_M);
-            MachimaniaBattle b = new MachimaniaBattle(Game.game.character.tileX, Game.game.character.tileY, 7, 5, new BattlePlayer[]{Game.debugPlayer, Game.debugEnemy});
+            MachimaniaBattle b = new MachimaniaBattle((int)Game.game.character.posX, (int)Game.game.character.posY, 7, 5, new BattlePlayer[]{Game.debugPlayer, Game.debugEnemy});
             Game.game.world.battles.add(b);
             Game.game.screen = new ScreenBattle(drawing, this, b, Game.debugPlayer);
         }
@@ -69,6 +57,7 @@ public class ScreenWorld extends Screen
 
         window.transformations.clear();
         window.transformations.add(new Translation(Game.game.window, 0, 0, -Game.game.character.posZ / drawing.gameDepth));
+        window.transformations.add(new Translation(Game.game.window, 0, 0, -0.3));
         window.transformations.add(new RotationAboutPoint(Game.game.window, 0, 0, r, 0, 0, -1));
         window.transformations.add(new RotationAboutPoint(Game.game.window, y, p, 0, 0, 0, -1));
         window.transformations.add(perspectiveRotation);

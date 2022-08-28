@@ -9,7 +9,7 @@ import java.util.LinkedList;
 
 public class World
 {
-    public static final int load_distance = 40;
+    public static final int load_distance = 64;
 
     public ArrayList<Region> regions = new ArrayList<>();
     public ArrayList<MachimaniaBattle> battles = new ArrayList<>();
@@ -32,9 +32,9 @@ public class World
 
     public World()
     {
-        for (int i = -250; i < 250; i++)
+        for (int i = -256; i < 256; i++)
         {
-            for (int j = -250; j < 250; j++)
+            for (int j = -256; j < 256; j++)
             {
                 regions.add(new Region(-4 + 8 * i, -4 + 8 * j, 8, 8));
             }
@@ -56,7 +56,7 @@ public class World
         return true;
     }
 
-    public void updateLoadedRegions(int x, int y)
+    public void updateLoadedRegions(double x, double y)
     {
         if (!this.loadPendingRegions.isEmpty())
         {

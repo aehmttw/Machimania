@@ -29,7 +29,7 @@ public class Game implements IUpdater, IDrawer, IWindowHandler
     public ArrayList<ScreenOverlay> screenOverlays = new ArrayList<>();
 
     public boolean debug = false;
-    public boolean vsync = true;
+    public boolean vsync = false;
     public boolean antialiasing = false;
 
     public double frameFrequency;
