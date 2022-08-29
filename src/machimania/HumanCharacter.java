@@ -27,8 +27,10 @@ public class HumanCharacter
     public static double baseWalkSpeed = -0.02;
     public static double baseRunSpeed = 4*baseWalkSpeed;
     public static double baseReverseSpeed = -baseWalkSpeed/2;
+    public static double baseJumpSpeed = 0.05;
     public static double acceleration = 0.005;
     public static double friction = 0.00018;
+    public static double gravity = 0.00098;
     public static double baseTurnSpeed = Math.PI/144;
 
     public World world;
@@ -74,25 +76,36 @@ public class HumanCharacter
         else
             this.running = false;
 
+        if (Game.game.input.moveJump.isPressed())
+            if (this.posZ - localelev < 0.0001)
+                this.z = this.baseJumpSpeed;
+
+
         //Enforce Limits
         if (this.running && this.r < this.baseRunSpeed)
             this.r = this.baseRunSpeed;
-        if (!this.running && this.r < this.baseWalkSpeed)
-            this.r += (this.acceleration - this.friction)*Game.game.frameFrequency;
+        else if (!this.running && this.r < this.baseWalkSpeed)
+            this.r += this.acceleration*Game.game.frameFrequency;
         else if (this.r > this.baseReverseSpeed)
             this.r = this.baseReverseSpeed;
         else if (Math.abs(this.r) < 0.00001)
             this.r = 0;
+
+        if (this.posZ < localelev)
+            this.posZ = localelev;
 
 
         //Apply Forces
         if (Math.abs(this.r) > 0)
             this.r -= this.friction*Game.game.frameFrequency * sign(this.r);
 
+        if (this.posZ > localelev)
+            this.z -= this.gravity*Game.game.frameFrequency;
+
         //Execute movements
         this.posX += this.r * Math.sin(this.c)*Game.game.frameFrequency;
         this.posY += this.r * Math.cos(this.c)*Game.game.frameFrequency;
-        this.posZ = localelev;
+        this.posZ += z;
 
         //Animation
         if(Math.abs(this.r) > 0){
