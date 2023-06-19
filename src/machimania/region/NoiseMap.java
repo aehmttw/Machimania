@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class NoiseMap
 {
-    protected int cacheSize = 16;
+    protected int cacheSize = 1024;
     protected double[][] noiseGridCache = new double[cacheSize][cacheSize];
     protected int[][] noiseGridX = new int[cacheSize][cacheSize];
     protected int[][] noiseGridY = new int[cacheSize][cacheSize];

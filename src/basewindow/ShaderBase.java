@@ -14,6 +14,8 @@ public class ShaderBase extends ShaderProgram implements IBaseShader
     public Uniform1f glowLight;
     public Uniform1f shade;
     public Uniform1f glowShade;
+    public Uniform1f edgeLight;
+    public Uniform1f edgeCutoff;
     public Uniform1f minBrightness;
     public Uniform1f maxBrightness;
     public Uniform1b negativeBrightness;
@@ -39,7 +41,8 @@ public class ShaderBase extends ShaderProgram implements IBaseShader
     @Override
     public void initialize() throws Exception
     {
-        this.setUp("/shaders/main.vert", new String[]{"/shaders/main_default.vert"}, "/shaders/main.frag", new String[]{"/shaders/main_default.frag"});
+        this.setUp("/shaders/main.vert", new String[]{"/shaders/main_default.vert"},
+                "/shaders/main.frag", new String[]{"/shaders/main_default.frag"});
     }
 
     @Override

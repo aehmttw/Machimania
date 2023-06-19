@@ -850,9 +850,11 @@ public class Drawing
 
     public boolean isOutOfBounds(double drawX, double drawY)
     {
-        int dist = 300;
-        return drawX - dist * gameScale > Game.game.window.absoluteWidth || drawX + dist * gameScale < 0 || drawY - dist * gameScale > Game.game.window.absoluteHeight || drawY + dist * gameScale < 0;
+        return false;
     }
+//        int dist = 300;
+//        return drawX - dist * gameScale > Game.game.window.absoluteWidth || drawX + dist * gameScale < 0 || drawY - dist * gameScale > Game.game.window.absoluteHeight || drawY + dist * gameScale < 0;
+//    }
 
     public ArrayList<String> wrapText(String msg, double max, double fontSize)
     {

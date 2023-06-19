@@ -9,6 +9,9 @@ public class Tile
     public boolean isSolid = false;
     public boolean canInteract = false;
 
+    public boolean hasWater = true;
+    public double waterLevel = 20;
+
     public boolean update = false;
 
     public double posX;

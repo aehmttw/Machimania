@@ -7,6 +7,8 @@ public abstract class BaseShaderUtil
 
     public abstract void setUp(String vert, String[] vertHeaders, String frag, String[] fragHeaders) throws Exception;
 
+    public abstract void setUp(String vert, String[] vertHeaders, String geom, String[] geomHeaders, String frag, String[] fragHeaders) throws Exception;
+
     public abstract void setUpUniforms() throws InstantiationException, IllegalAccessException;
 
     public abstract ShaderProgram.Attribute getAttribute();

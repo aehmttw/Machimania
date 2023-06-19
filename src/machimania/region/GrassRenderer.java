@@ -13,6 +13,9 @@ public class GrassRenderer
     public ArrayList<Grass> grass = new ArrayList<>();
     public BaseStaticBatchRenderer batchRenderer;
 
+    public static int begin_grass_cutoff = 40;
+    public static int end_grass_cutoff = 80;
+
     public GrassRenderer(GroundRenderer gr)
     {
         this.groundRenderer = gr;
@@ -23,15 +26,19 @@ public class GrassRenderer
         {
             for (Tile t: ta)
             {
+                double waterMul = 1;
+                if (region.getHeightAtRelative(t.posX, t.posY) <= t.waterLevel + 1)
+                    waterMul = Math.max(0, (region.getHeightAtRelative(t.posX, t.posY) - t.waterLevel + 1) / 2);
+
                 if (!t.isSolid)
                 {
-                    for (int i = 0; i < Math.random() * 5 + 5; i++)
+                    for (int i = 0; i < (Math.random() * 5 + 5) * waterMul; i++)
                     {
                         double x = t.posX + Math.random() - 0.5;
                         double y = t.posY + Math.random() - 0.5;
                         double rx = x + this.region.posX;
                         double ry = y + this.region.posY;
-                        grass.add(new Grass(x, y, (1 * w.noiseMap16.get(rx, ry) + 0.3 * w.noiseMap4.get(rx, ry) + 0.15 * w.noiseMap1.get(rx, ry))));
+                        grass.add(new Grass(x, y, waterMul * (1 * w.noiseMap16.get(rx, ry) + 0.3 * w.noiseMap4.get(rx, ry) + 0.15 * w.noiseMap1.get(rx, ry))));
                     }
                 }
             }
@@ -54,11 +61,17 @@ public class GrassRenderer
 
     public void draw()
     {
+        double detail = this.getLoadDetail();
+
+        double z = (detail - 1);
+        if (detail <= 0)
+            return;
+
         Game.game.window.setShader(Game.game.shaderGrass);
         Game.game.shaderGrass.time.set((float) (System.currentTimeMillis() / 500.0 % (Math.PI * 16)));
         Game.game.shaderGrass.regionPos.set(this.region.posX, this.region.posY);
         Game.game.shaderGrass.playerPos.set((float) Game.game.character.posX, (float) Game.game.character.posY, (float) Game.game.character.posZ);
-        Game.game.drawing.drawBatch(this.batchRenderer, region.posX, region.posY, 0, 1, 1, 1, true, true);
+        Game.game.drawing.drawBatch(this.batchRenderer, region.posX, region.posY, z, 1, 1, 1, true, true);
         Game.game.window.setShader(Game.game.window.shaderBase);
     }
 
@@ -75,7 +88,7 @@ public class GrassRenderer
         {
             this.posX = posX;
             this.posY = posY;
-            this.width = Math.random() * 0.5 + 0.5;
+            this.width = (Math.random() * 0.5 + 0.5) * Math.min(height, 0.5) * 2;
             this.height = height + Math.random() * 0.2;
             this.angle = Math.random() * Math.PI * 2;
             this.skew = Math.random() * 0.4 - 0.2;
@@ -144,5 +157,17 @@ public class GrassRenderer
             n3[2] /= size;
             return n3;
         }
+    }
+
+    public double getLoadDetail()
+    {
+        double dist = groundRenderer.distToPlayer();
+
+        if (dist <= begin_grass_cutoff)
+            return 1;
+        else if (dist > begin_grass_cutoff && dist <= end_grass_cutoff)
+            return 1 - (dist - begin_grass_cutoff) / (end_grass_cutoff - begin_grass_cutoff);
+        else
+            return 0;
     }
 }

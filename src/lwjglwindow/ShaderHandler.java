@@ -1,9 +1,5 @@
 package lwjglwindow;
 
-import basewindow.ShaderBase;
-import basewindow.ShaderBones;
-import basewindow.ShaderShadowMap;
-import basewindow.ShaderShadowMapBones;
 import org.lwjgl.opengl.GL13;
 
 import java.nio.ByteBuffer;

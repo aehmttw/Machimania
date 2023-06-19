@@ -13,7 +13,7 @@ vec4 getPos(mat4 transform)
 
 vec3 getNormal(mat4 transform)
 {
-    return gl_Normal;
+    return (gl_ModelViewProjectionMatrix * vec4(gl_Normal, 0)).xyz;
 }
 
 mat4 getTransform()

@@ -1,17 +1,21 @@
 package machimania;
 
+import machimania.region.GroundRendererLowDetail;
 import machimania.region.NoiseMap;
 import machimania.region.Region;
+import machimania.region.RegionMap;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 
 public class World
 {
-    public static final int load_distance = 40;
+    public static final int load_distance_high_detail = 60;
+    public static final int load_distance_low_detail = 2400;
 
-    public ArrayList<Region> regions = new ArrayList<>();
+    public RegionMap regions = new RegionMap();
     public ArrayList<MachimaniaBattle> battles = new ArrayList<>();
 
     public SkyRenderer sky = new SkyRenderer();
@@ -20,52 +24,64 @@ public class World
     public NoiseMap noiseMap4 = new NoiseMap(4, 1);
     public NoiseMap noiseMap1 = new NoiseMap(1, 2);
 
+    public NoiseMap heightMap2048 = new NoiseMap(2048, 7);
     public NoiseMap heightMap256 = new NoiseMap(256, 6);
     public NoiseMap heightMap32 = new NoiseMap(32, 3);
     public NoiseMap heightMap8 = new NoiseMap(8, 4);
     public NoiseMap heightMap2 = new NoiseMap(2, 5);
+    public NoiseMap heightMap1 = new NoiseMap(1, 7);
 
-    public LinkedList<Region> loadedRegions = new LinkedList<>();
-    public LinkedList<Region> loadPendingRegions = new LinkedList<>();
-    public LinkedList<Region> unloadedRegions = new LinkedList<>();
-    public LinkedList<Region> unloadPendingRegions = new LinkedList<>();
+    public LinkedHashSet<Region> loadedRegions = new LinkedHashSet<>();
+    public LinkedHashSet<Region> loadPendingRegions = new LinkedHashSet<>();
+    public LinkedHashSet<Region> unloadPendingRegions = new LinkedHashSet<>();
+
+    public LinkedHashSet<Region> loadedRegionsLowDetail = new LinkedHashSet<>();
+    public LinkedHashSet<Region> loadPendingRegionsLowDetail = new LinkedHashSet<>();
+    public LinkedHashSet<Region> unloadPendingRegionsLowDetail = new LinkedHashSet<>();
+
 
     public World()
     {
-        for (int i = -250; i < 250; i++)
-        {
-            for (int j = -250; j < 250; j++)
-            {
-                regions.add(new Region(-4 + 8 * i, -4 + 8 * j, 8, 8));
-            }
-        }
 
-        unloadedRegions.addAll(this.regions);
     }
 
     public boolean isSolid(int x, int y)
     {
-        for (Region r: this.regions)
-        {
-            if (x >= r.posX && y >= r.posY && x < r.posX + r.sizeX && y < r.posY + r.sizeY)
-            {
-                return r.tiles[x - r.posX][y - r.posY].isSolid;
-            }
-        }
-
-        return true;
+        Region r = regions.getRegion(x, y);
+        return r.tiles[x - r.posX][y - r.posY].isSolid;
     }
 
-    public void updateLoadedRegions(int x, int y)
+    public void updateLoadedRegions(int x, int y, boolean lowDetail)
     {
-        if (!this.loadPendingRegions.isEmpty())
+        LinkedHashSet<Region> loaded;
+        LinkedHashSet<Region> loadPending;
+        LinkedHashSet<Region> unloadPending;
+        int loadDist;
+
+        if (!lowDetail)
         {
-            for (int i = 0; i < 1; i++)
+            loaded = this.loadedRegions;
+            loadPending = this.loadPendingRegions;
+            unloadPending = this.unloadPendingRegions;
+            loadDist = load_distance_high_detail;
+        }
+        else
+        {
+            loaded = this.loadedRegionsLowDetail;
+            loadPending = this.loadPendingRegionsLowDetail;
+            unloadPending = this.unloadPendingRegionsLowDetail;
+            loadDist = load_distance_low_detail;
+        }
+
+        if (!loadPending.isEmpty())
+        {
+            long time = System.currentTimeMillis();
+            while (loadPending.size() > 0 && System.currentTimeMillis() < time + 10)
             {
                 double nearestDist = Double.MAX_VALUE;
                 Region nearest = null;
 
-                for (Region r : this.loadPendingRegions)
+                for (Region r : loadPending)
                 {
                     double dist = Math.pow(x - (r.posX + r.sizeX / 2.0), 2) + Math.pow(y - (r.posY + r.sizeY / 2.0), 2);
 
@@ -78,66 +94,73 @@ public class World
 
                 if (nearest != null)
                 {
-                    this.loadPendingRegions.remove(nearest);
+                    loadPending.remove(nearest);
 
-                    if (x >= nearest.posX - load_distance && x <= nearest.posX + nearest.sizeX + load_distance && y >= nearest.posY - load_distance && y <= nearest.posY + nearest.sizeY + load_distance)
+                    if (nearestDist < loadDist * loadDist)
                     {
-                        nearest.load();
-                        this.loadedRegions.add(nearest);
-                    }
-                    else
-                    {
-                        this.unloadedRegions.add(nearest);
+                        if (lowDetail)
+                            nearest.loadLowDetail();
+                        else
+                            nearest.load();
+
+                        loaded.add(nearest);
                     }
                 }
             }
         }
 
-        if (!this.unloadPendingRegions.isEmpty())
+        if (!unloadPending.isEmpty())
         {
-            for (Region r: this.unloadPendingRegions)
+            for (Region r: unloadPending)
             {
-                r.unload();
-                this.unloadedRegions.add(r);
+                if (lowDetail)
+                    r.unloadLowDetail();
+                else
+                    r.unload();
             }
 
-           this.unloadPendingRegions.clear();
+           unloadPending.clear();
         }
 
-        Iterator<Region> unloadedIrritator = this.unloadedRegions.iterator();
-        while (unloadedIrritator.hasNext())
+        for (int i = -loadDist; i < loadDist; i += RegionMap.region_size)
         {
-            Region r = unloadedIrritator.next();
-            if (x >= r.posX - load_distance && x <= r.posX + r.sizeX + load_distance && y >= r.posY - load_distance && y <= r.posY + r.sizeY + load_distance)
+            for (int j = -loadDist; j < loadDist; j += RegionMap.region_size)
             {
-                unloadedIrritator.remove();
-                loadPendingRegions.add(r);
+                Region r = regions.getRegion((int) (i + Game.game.character.posX), (int) (j + Game.game.character.posY));
+                boolean l = (r.loaded && !lowDetail) || (r.loadedLowDetail && lowDetail);
+                double distSq = distSqToPlayer(r.posX + r.sizeX / 2.0, r.posY + r.sizeY / 2.0);
+                if (!l && distSq < loadDist * loadDist)
+                {
+                    int detail = GroundRendererLowDetail.getLoadDetail(Math.sqrt(distSq));
+                    int grid = (int) Math.pow(2, detail) / RegionMap.region_size;
+
+                    if (grid <= 0 || Math.floorMod(Math.floorDiv(r.posX, RegionMap.region_size), grid) == 0 && Math.floorMod(Math.floorDiv(r.posY, RegionMap.region_size), grid) == 0)
+                        loadPending.add(r);
+                }
             }
         }
 
-        Iterator<Region> loadedIrritator = this.loadedRegions.iterator();
+        Iterator<Region> loadedIrritator = loaded.iterator();
         while (loadedIrritator.hasNext())
         {
             Region r = loadedIrritator.next();
-            if (!(x >= r.posX - load_distance && x <= r.posX + r.sizeX + load_distance && y >= r.posY - load_distance && y <= r.posY + r.sizeY + load_distance))
+            if (!(distSqToPlayer(r.posX + r.sizeX / 2.0, r.posY + r.sizeY / 2.0) < loadDist * loadDist))
             {
                 loadedIrritator.remove();
-                unloadPendingRegions.add(r);
+
+                double distSq = distSqToPlayer(r.posX + r.sizeX / 2.0, r.posY + r.sizeY / 2.0);
+                int detail = GroundRendererLowDetail.getLoadDetail(Math.sqrt(distSq));
+                int grid = (int) Math.pow(2, detail) / RegionMap.region_size;
+
+                if (!(grid <= 0 || Math.floorMod(r.posX / RegionMap.region_size, grid) == 0 && Math.floorMod(r.posY / RegionMap.region_size, grid) == 0))
+                    unloadPending.add(r);
             }
         }
     }
 
     public Region getRegion(double x, double y)
     {
-        for (Region r: this.regions)
-        {
-            if (r.loaded && r.posX <= x && r.posX + r.sizeX > x && r.posY <= y && r.posY + r.sizeY > y)
-            {
-                return r;
-            }
-        }
-
-        return null;
+        return regions.getRegion((int) x, (int) y);
     }
 
     public void drawTiles(Drawing d)
@@ -146,5 +169,22 @@ public class World
 
         for (Region r: this.loadedRegions)
             r.drawTiles(d);
+
+        for (Region r: this.loadedRegionsLowDetail)
+        {
+            if (!r.loaded)
+                r.drawTiles(d);
+        }
+    }
+
+    public void drawTilesTransparent(Drawing d)
+    {
+        for (Region r: this.loadedRegions)
+            r.drawTilesTransparent(d);
+    }
+
+    public double distSqToPlayer(double x, double y)
+    {
+        return Math.pow(x - Game.game.character.posX, 2) + Math.pow(y - Game.game.character.posY, 2);
     }
 }

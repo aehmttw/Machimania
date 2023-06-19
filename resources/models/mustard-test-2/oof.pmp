@@ -1,0 +1,5 @@
+rotation Bip_L_UpperArm 0 0 -50
+rotation Bip_R_UpperArm 0 0 50
+
+rotation Bip_L_UpperLeg 0 0 -50
+rotation Bip_R_UpperLeg 0 0 50

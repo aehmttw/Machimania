@@ -28,6 +28,9 @@ uniform float glowLight;
 uniform float shade;
 uniform float glowShade;
 
+uniform float edgeLight;
+uniform float edgeCutoff;
+
 uniform float celsections;
 
 uniform int shadowres;
@@ -40,8 +43,6 @@ uniform vec4 originalColor;
 
 uniform bool useNormal;
 varying vec3 normal;
-
-varying vec3 position;
 
 uniform mat4 lightViewProjectionMatrix;
 
@@ -185,4 +186,9 @@ void main(void)
             }
         }
     }
+
+    float diff = 1.0f - abs(dot(normal, normalize(inverse(toMat3(gl_ProjectionMatrix)) * vec3(0, 0, -1))));
+    float elight = max(0, diff - edgeCutoff) / (1.0 - edgeCutoff);
+    gl_FragColor.xyz *= 1 + elight * edgeLight;
+
 }

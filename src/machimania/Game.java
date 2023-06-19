@@ -7,6 +7,7 @@ import machimania.input.InputBindingGroup;
 import machimania.input.InputBindings;
 import machimania.machine.MachineElement;
 import machimania.region.ShaderGrass;
+import machimania.region.ShaderWater;
 
 import java.util.ArrayList;
 
@@ -38,6 +39,7 @@ public class Game implements IUpdater, IDrawer, IWindowHandler
     public HumanCharacter character;
 
     public ShaderGrass shaderGrass;
+    public ShaderWater shaderWater;
 
     public ScreenOverlayFPS fpsCounter;
 
@@ -83,6 +85,9 @@ public class Game implements IUpdater, IDrawer, IWindowHandler
         {
             this.shaderGrass = new ShaderGrass(this.window);
             this.shaderGrass.initialize();
+
+            this.shaderWater = new ShaderWater(this.window);
+            this.shaderWater.initialize();
         }
         catch (Exception e)
         {

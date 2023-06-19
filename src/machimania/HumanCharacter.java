@@ -4,9 +4,6 @@ import basewindow.*;
 import machimania.gui.screen.ScreenOverlayMessage;
 import machimania.region.Region;
 
-import java.awt.*;
-import java.util.Arrays;
-
 public class HumanCharacter
 {
     public static PosedModelPose idleHandsAnimation;
@@ -14,6 +11,7 @@ public class HumanCharacter
     public static PosedModelPose standAnimation;
     public static PosedModelAnimation walkAnimation;
     public static PosedModelAnimation runAnimation;
+    public static PosedModelPose catapultAnimation;
 
     protected Drawing drawing;
     public PosedModel model;
@@ -21,7 +19,6 @@ public class HumanCharacter
     public double age = 0;
     public double animationTimer = 0;
 
-    public double rotation;
     public int tileX;
     public int tileY;
 
@@ -37,7 +34,9 @@ public class HumanCharacter
     public double vY;
     public double vZ;
 
-    public double orientation;
+    public double direction;
+    public double pitch;
+    public double yaw;
 
     public double turnTime;
 
@@ -64,7 +63,15 @@ public class HumanCharacter
     public double gravity = 0.00098;
     public boolean grounded = false;
 
+    public boolean catapultMode = false;
+    public double catapultTime = 0;
+    public double peakCatapultHeight;
+    public boolean catapultRotationLock = false;
+    public double catapultRotationPitch = 0;
+
     public World world;
+
+    public Model testModel;
 
     public HumanCharacter(Drawing d, String model, World world)
     {
@@ -72,6 +79,9 @@ public class HumanCharacter
         this.drawing = d;
         Model m = d.createModel(model);
         this.model = Game.game.window.createPosedModel(m);
+
+        Model m2 = d.createModel("/models/sphere/");
+        this.testModel = m2;
     }
 
     public void update()
@@ -80,11 +90,25 @@ public class HumanCharacter
         this.tileX = (int) Math.round(this.posX);
         this.tileY = (int) Math.round(this.posY);
 
-        Game.game.world.updateLoadedRegions(this.tileX, this.tileY);
+        Game.game.world.updateLoadedRegions(this.tileX, this.tileY, false);
+        Game.game.world.updateLoadedRegions(this.tileX, this.tileY, true);
 
         Region region = this.world.getRegion(this.posX, this.posY);
 
         this.model.resetBones();
+
+        if (!this.catapultRotationLock)
+        {
+            this.direction = (this.direction + Math.PI * 2) % (Math.PI * 2);
+            double dist = Math.sqrt(Math.pow(this.posX - this.lastPosX, 2) + Math.pow(this.posY - this.lastPosY, 2));
+
+            double dir = Math.PI + this.getAngleInDirection(this.lastPosX, this.lastPosY);
+            this.direction -= angleBetween(this.direction, dir) * 3 * dist;
+        }
+
+        this.lastPosX = this.posX;
+        this.lastPosY = this.posY;
+        this.lastPosZ = this.posZ;
 
         boolean up = Game.game.input.moveUp.isPressed();
         boolean down = Game.game.input.moveDown.isPressed();
@@ -164,35 +188,63 @@ public class HumanCharacter
 
         this.vZ -= this.gravity;
 
+        if (catapultMode)
+            this.catapultTime += Game.game.frameFrequency;
+        else
+            this.catapultTime = 0;
+
         if (region != null)
         {
-            double groundHeight = region.getHeightAt(this.posX, this.posY) + posZOffset;
+            double groundHeight = region.getHeightAtAbsolute(this.posX, this.posY) + posZOffset;
             if (this.posZ <= groundHeight)
             {
-                this.posZ = groundHeight; //2 * groundHeight - posZ;
-                /*double z = Math.sqrt(this.vX * this.vX + this.vY * this.vY + this.vZ * this.vZ);
-                float[] n = region.getNormalAt(this.posX - region.posX, this.posY - region.posY);
-                this.vX = n[0] * z;
-                this.vY = n[1] * z;
-                this.vZ = -n[2] * z;*/
-                this.grounded = true;
+                if (!catapultMode)
+                {
+                    this.posZ = groundHeight;
+                    this.vZ = 0;
+                }
+                else
+                {
+                    this.posZ = 2 * groundHeight - posZ;
+                    double z = Math.sqrt(this.vX * this.vX + this.vY * this.vY + this.vZ * this.vZ);
+                    float[] n = region.getNormalAt(this.posX - region.posX, this.posY - region.posY);
+                    this.vX = n[0] * z;
+                    this.vY = n[1] * z;
+                    this.vZ = -n[2] * z * 0.3;
+                    this.catapultRotationLock = true;
+                    this.catapultRotationPitch = pitch;
+
+                    if (Math.abs(this.vZ) <= 0.01)
+                    {
+                        this.catapultMode = false;
+                        this.catapultRotationLock = false;
+                        this.vZ = 0;
+                        this.posZ = groundHeight;
+                    }
+                }
             }
-            else
-                this.grounded = false;
+            else if (this.catapultMode)
+            {
+                double frac = Math.pow(0.995, Game.game.frameFrequency);
+                this.vX *= frac;
+                this.vY *= frac;
+            }
+
+            this.grounded = this.posZ <= groundHeight + 0.02;
         }
 
+
         if (Game.game.window.pressedKeys.contains(InputCodes.KEY_K) && region != null)
-            this.posZ = region.getHeightAt(this.posX, this.posY) + posZOffset;
+            this.posZ = region.getHeightAtAbsolute(this.posX, this.posY) + posZOffset;
 
-        this.orientation = (this.orientation + Math.PI * 2) % (Math.PI * 2);
-        double dist = Math.sqrt(Math.pow(this.posX - this.lastPosX, 2) + Math.pow(this.posY - this.lastPosY, 2));
-
-        double dir = Math.PI + this.getAngleInDirection(this.lastPosX, this.lastPosY);
-        this.orientation -= angleBetween(this.orientation, dir) * 3 * dist;
-
-        this.lastPosX = this.posX;
-        this.lastPosY = this.posY;
-        this.lastPosZ = this.posZ;
+        if (Game.game.window.validPressedKeys.contains(InputCodes.KEY_B))
+        {
+            Game.game.window.validPressedKeys.remove((Integer) InputCodes.KEY_B);
+            this.catapultMode = true;
+            this.grounded = false;
+            this.addPolarMotion(this.direction, 0.1);
+            this.vZ = 0.05;
+        }
 
         if (Game.game.window.validPressedKeys.contains(InputCodes.KEY_RIGHT_SHIFT))
         {
@@ -217,6 +269,10 @@ public class HumanCharacter
         idleHandsAnimation.apply(this.model, 1);
         standAnimation.apply(this.model, 1);
 
+        double catapultFrac = Math.min(1, this.catapultTime / 50.0);
+        if (this.catapultMode)
+            catapultAnimation.apply(this.model, catapultFrac);
+
         this.walkSpeed = speed;
 
         double t = 0.05;
@@ -228,10 +284,14 @@ public class HumanCharacter
             this.smoothMoveSpeed = this.walkSpeed;
 
         this.animationTimer += (1.4 + 0.6 * this.runPercentage) * Game.game.frameFrequency;
-        walkAnimation.apply(this.model, this.animationTimer, (1 - this.runPercentage) * this.smoothMoveSpeed / this.baseMoveSpeed);
-        runAnimation.apply(this.model, this.animationTimer, this.runPercentage * this.smoothMoveSpeed / this.baseMoveSpeed);
+
+        walkAnimation.apply(this.model, this.animationTimer, (1 - catapultFrac) * (1 - this.runPercentage) * this.smoothMoveSpeed / this.baseMoveSpeed);
+        runAnimation.apply(this.model, this.animationTimer, (1 - catapultFrac) * this.runPercentage * this.smoothMoveSpeed / this.baseMoveSpeed);
 
         this.age += Game.game.frameFrequency;
+
+        this.pitch = Math.PI / 2;
+        this.calculateCatapultAngles();
     }
 
     public void updateRunning()
@@ -246,14 +306,54 @@ public class HumanCharacter
         this.turnDuration = this.runTurnDuration * this.runPercentage + this.walkTurnDuration * (1 - this.runPercentage);
     }
 
+    public void calculateCatapultAngles()
+    {
+        if (this.catapultMode)
+        {
+            Region region = this.world.getRegion(this.posX, this.posY);
+
+            if (region == null)
+                return;
+
+            double h = region.getHeightAtAbsolute(this.posX, this.posY);
+            pitch += Math.atan(this.vZ / Math.sqrt(this.vX * this.vX + this.vY * this.vY + this.vZ * this.vZ));
+
+            if (this.catapultRotationLock)
+            {
+                pitch = catapultRotationPitch;
+                // r = - Math.PI / 2 - this.catapultRotationOrientation;
+            }
+
+            double speed = this.getSpeed();
+            double angle = region.getSlopeAtFacing(this.posX, this.posY, this.posX + this.vX / speed * 2, this.posY + this.vY / speed * 2);
+            double angle2 = region.getSlopeAtFacing(this.posX - this.vY / speed * 2, this.posY + this.vX / speed * 2, this.posX + this.vY / speed * 2, this.posY - this.vX / speed * 2);
+
+            if (this.vZ <= 0)
+            {
+                double splatDist = 2;
+                if (this.posZ <= Math.min(h + splatDist, this.peakCatapultHeight))
+                {
+                    double splatFrac = 1 - (this.posZ - h) / Math.min(splatDist, this.peakCatapultHeight - h);
+                    pitch = (pitch * (1 - splatFrac) + angle * splatFrac);
+                    yaw = (yaw * (1 - splatFrac) + angle2 * splatFrac);
+                }
+            }
+            else
+            {
+                this.peakCatapultHeight = this.posZ;
+            }
+        }
+    }
+
     public void draw()
     {
         double frac = (this.turnTime) / this.currentTurnDuration;
         double frac2 = -Math.pow(frac * 2, 3) * 0.25 + Math.pow(frac * 2, 2) * 0.75;
 
-        double r = - Math.PI / 2 - this.orientation; //this.rotation * (1 - frac2) + this.prevRotation * frac2;
+        double r = - Math.PI / 2 - this.direction; //this.rotation * (1 - frac2) + this.prevRotation * frac2;
 
-        this.drawing.drawModel(this.model, this.posX, this.posY, this.posZ, 1, 1, 1, 0,  Math.PI / 2, r /*(r - 1) * Math.PI / 2*/);
+        this.drawing.drawModel(this.model, this.posX, this.posY, this.posZ, 1, 1, 1, yaw,  pitch, r /*(r - 1) * Math.PI / 2*/);
+        //this.drawing.drawModel(this.testModel, this.posX, this.posY, this.posZ, 1, 1, 1, -r, pitch, yaw);
 
         //Game.game.drawing.setColor(255, 255, 0);
         //Game.game.drawing.fillBox(this.tileX, this.tileY, -0.2, 1, 1, 0.3);
@@ -263,8 +363,9 @@ public class HumanCharacter
 
     public static void loadAnimations()
     {
-        idleHandsAnimation = new PosedModelPose(Game.game.fileManager, "/models/mustard-test/idlehands.pmp");
-        standAnimation = new PosedModelPose(Game.game.fileManager, "/models/mustard-test/stand.pmp");
+        idleHandsAnimation = new PosedModelPose(Game.game.fileManager, "/models/mustard-test-2/idlehands.pmp");
+        standAnimation = new PosedModelPose(Game.game.fileManager, "/models/mustard-test-2/stand.pmp");
+        catapultAnimation = new PosedModelPose(Game.game.fileManager, "/models/mustard-test-2/oof.pmp");
         walkAnimation = new PosedModelAnimation(Game.game.fileManager, "/models/mustard-test-2/walk.pma");
         runAnimation = new PosedModelAnimation(Game.game.fileManager, "/models/mustard-test-2/run.pma");
     }

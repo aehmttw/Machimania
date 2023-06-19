@@ -1,5 +1,7 @@
 package lwjglwindow;
 
+import static org.lwjgl.opengl.EXTGeometryShader4.*;
+
 import basewindow.BaseShaderUtil;
 import basewindow.ShaderProgram;
 import org.lwjgl.opengl.ARBShaderObjects;
@@ -29,10 +31,16 @@ public class ShaderUtil extends BaseShaderUtil
     @Override
     public void setUp(String vert, String[] vertHeaders, String frag, String[] fragHeaders) throws Exception
     {
-        this.createProgram(vert, vertHeaders, frag, fragHeaders);
+        this.createProgram(vert, vertHeaders, null, null, frag, fragHeaders);
     }
 
-    public void createProgram(String vert, String[] vertHeaders, String frag, String[] fragHeaders) throws Exception
+    @Override
+    public void setUp(String vert, String[] vertHeaders, String geom, String[] geomHeaders, String frag, String[] fragHeaders) throws Exception
+    {
+        this.createProgram(vert, vertHeaders, geom, geomHeaders, frag, fragHeaders);
+    }
+
+    public void createProgram(String vert, String[] vertHeaders, String geom, String[] geomHeaders, String frag, String[] fragHeaders) throws Exception
     {
         this.programID = glCreateProgram();
 
@@ -41,8 +49,20 @@ public class ShaderUtil extends BaseShaderUtil
 
         glAttachShader(this.programID, vshader);
         glAttachShader(this.programID, fshader);
+
+        if (geom != null)
+        {
+            int gshader = this.createShader(geom, geomHeaders, GL_GEOMETRY_SHADER_EXT);
+            glAttachShader(this.programID, gshader);
+
+            //int[] max = new int[1];
+            //glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES_EXT, max);
+            glProgramParameteriEXT(this.programID, GL_GEOMETRY_VERTICES_OUT_EXT, 3);
+        }
+
         glLinkProgram(this.programID);
         this.program.bindAttributes();
+        this.program.initializeAttributeParameters();
 
         int linked = glGetProgrami(this.programID, GL_LINK_STATUS);
         String programLog = glGetProgramInfoLog(this.programID);

@@ -42,10 +42,10 @@ public class ScreenWorld extends Screen
             r -= 0.01;
 
         if (Game.game.window.pressedKeys.contains(InputCodes.KEY_EQUAL))
-            dist -= 0.02;
+            dist -= 0.2;
 
         if (Game.game.window.pressedKeys.contains(InputCodes.KEY_MINUS))
-            dist += 0.02;
+            dist += 0.2;
 
         if (Game.game.window.validPressedKeys.contains(InputCodes.KEY_M))
         {
@@ -68,7 +68,7 @@ public class ScreenWorld extends Screen
         BaseWindow window = Game.game.window;
 
         window.transformations.clear();
-        window.transformations.add(new Translation(Game.game.window, 0, 0, -Game.game.character.posZ / drawing.gameDepth));
+        window.transformations.add(new Translation(Game.game.window, 0, 0, (-Game.game.character.posZ - 1) / drawing.gameDepth));
         window.transformations.add(new RotationAboutPoint(Game.game.window, 0, 0, r, 0, 0, -1));
         window.transformations.add(new RotationAboutPoint(Game.game.window, y, p, 0, 0, 0, -1));
         window.transformations.add(perspectiveRotation);
@@ -84,6 +84,8 @@ public class ScreenWorld extends Screen
 
         drawing.setColor(255, 255, 255);
         Game.game.character.draw();
+
+        Game.game.world.drawTilesTransparent(drawing);
 
         window.transformations.clear();
         window.loadPerspective();

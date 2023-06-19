@@ -50,6 +50,11 @@ public abstract class ShaderProgram
         this.util.setUp(vert, vertHeaders, frag, fragHeaders);
     }
 
+    public void setUp(String vert, String[] vertHeaders, String geom, String[] geomHeaders, String frag, String[] fragHeaders) throws Exception
+    {
+        this.util.setUp(vert, vertHeaders, geom, geomHeaders, frag, fragHeaders);
+    }
+
     public void set()
     {
         this.util.set();

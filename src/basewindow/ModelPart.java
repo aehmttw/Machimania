@@ -128,6 +128,7 @@ public abstract class ModelPart implements IModel
     public ModelPart(BaseWindow window, Model model, ArrayList<Shape> shapes, Model.Material material)
     {
         this.setWindow(window);
+
         this.parent = model;
         this.shapes = new Shape[shapes.size()];
         this.material = material;
